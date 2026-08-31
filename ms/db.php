@@ -6,21 +6,22 @@ function adicionar_server($port, $nome, $mods)
 	global $db;
 	
 	$ip = $_SERVER["REMOTE_ADDR"];
-	$fullIp = $ip . ":" . $port;
 
 	if (server_requestIPator($ip, $port) != null) {
-		$rows = $db->prepare("UPDATE servers SET nome = ?, mods = ?, dataBump = NOW() WHERE ip = ?");
+		$rows = $db->prepare("UPDATE j_servers SET nome = ?, mods = ?, dataBump = NOW() WHERE ip = ? AND port = ?");
 		$rows->bindParam(1, $nome);
 		$rows->bindParam(2, $mods);
-		$rows->bindValue(3, $fullIp);
+		$rows->bindParam(3, $ip);
+		$rows->bindParam(4, $port);
 		$rows->execute();
 		return;
 	}
 	
-	$rows = $db->prepare("INSERT INTO servers (ip, nome, mods) VALUES (?, ?, ?)");
-	$rows->bindValue(1, $fullIp);
-	$rows->bindParam(2, $nome);
-	$rows->bindParam(3, $mods);
+	$rows = $db->prepare("INSERT INTO j_servers (ip, port, nome, mods) VALUES (?, ?, ?, ?)");
+	$rows->bindParam(1, $ip);
+	$rows->bindParam(2, $port);
+	$rows->bindParam(3, $nome);
+	$rows->bindParam(4, $mods);
 	$rows->execute();
 }
 
@@ -29,8 +30,9 @@ function deletar_server($port)
 	global $db;
 	$ip = $_SERVER["REMOTE_ADDR"];
 	
-	$rows = $db->prepare("DELETE FROM servers WHERE ip = ?");
-	$rows->bindValue(1, $ip . ":" . $port);
+	$rows = $db->prepare("DELETE FROM j_servers WHERE ip = ? AND port = ?");
+	$rows->bindParam(1, $ip);
+	$rows->bindParam(2, $port);
 	$rows->execute();
 }
 
@@ -38,7 +40,7 @@ function limpar_servers()
 {
 	global $db;
 	
-	$rows = $db->prepare("DELETE FROM servers WHERE dataBump < NOW() - INTERVAL 5 MINUTE");
+	$rows = $db->prepare("DELETE FROM j_servers WHERE dataBump < NOW() - INTERVAL 5 MINUTE");
 	$rows->execute();
 }
 
@@ -46,8 +48,9 @@ function server_requestIPator($ip, $port)
 {
 	global $db;
 
-	$rows = $db->prepare("SELECT * FROM servers WHERE ip = ?");
-	$rows->bindValue(1, $ip . ":" . $port);
+	$rows = $db->prepare("SELECT * FROM j_servers WHERE ip = ? AND port = ?");
+	$rows->bindParam(1, $ip);
+	$rows->bindParam(2, $port);
 	$rows->execute();
 	$server = $rows->fetch(PDO::FETCH_OBJ);
 
@@ -61,7 +64,7 @@ function server_listator($temMods = true)
 {
 	global $db;
 
-	$rows = $db->prepare("SELECT * FROM servers");
+	$rows = $db->prepare("SELECT * FROM j_servers");
 	$rows->execute();
 
 	$servers = [];

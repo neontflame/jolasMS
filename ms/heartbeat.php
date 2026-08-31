@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/autoload.php';
+include 'autoload.php';
 
 $mods = "";
 if (isset($_GET["mods"])) {

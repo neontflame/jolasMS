@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-include $_SERVER['DOCUMENT_ROOT'] . '/autoload.php';
+include 'autoload.php';
 
 limpar_servers();
 
@@ -12,6 +12,7 @@ echo '{"servers": [';
 foreach ($servs as $servinho) {
 	echo '{';
 	echo '"ip": "' . $servinho->ip . '",';
+	echo '"port": "' . $servinho->port . '",';
 	echo '"nome": "' . $servinho->nome . '",';
 	echo '"mods": [' . arrayizar_mods($servinho->mods) . ']';
 	if (count($servs) > $serversQueForam) {

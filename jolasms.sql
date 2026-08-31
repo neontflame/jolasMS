@@ -24,13 +24,14 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `servers`
+-- Estrutura para tabela `j_servers`
 --
 
-DROP TABLE IF EXISTS `servers`;
-CREATE TABLE IF NOT EXISTS `servers` (
+DROP TABLE IF EXISTS `j_servers`;
+CREATE TABLE IF NOT EXISTS `j_servers` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ip` text NOT NULL,
+  `port` int NOT NULL,
   `nome` text NOT NULL,
   `mods` text NOT NULL,
   `dataBump` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
