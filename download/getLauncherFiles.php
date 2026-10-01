@@ -11,7 +11,7 @@ $blacklist = [
 ];
 
 if (isset($_GET['plat'])) {
-	if ($_GET['plat'] == 'Linux') {
+	if (strtolower($_GET['plat']) === 'linux') {
 		array_push($blacklist, 'jolasLauncher.exe');
 	} else {
 		array_push($blacklist, 'jolasLauncher');
@@ -30,6 +30,7 @@ if (is_file($iniPath)) {
 	$config = parse_ini_file($iniPath, true);
 	if ($config !== false && isset($config['redirects']) && is_array($config['redirects'])) {
 		foreach (array_keys($config['redirects']) as $redirectName) {
+			if (in_array($redirectName, $blacklist)) continue;
 			$assets[$redirectName] = ['name' => $redirectName];
 		}
 	}
